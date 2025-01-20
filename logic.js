@@ -156,8 +156,8 @@ const raySlider = document.getElementById("raySlider");
 const numRaysDisplay = document.getElementById("numRaysDisplay");
 
 raySlider.addEventListener('input', (e) => {
-  numRays = parseInt(e.target.value, 10); // Actualizamos el número de rayos
-  numRaysDisplay.textContent = `Rayos: ${numRays}`; // Actualizamos el texto para mostrar el número de rayos
+  numRays = parseInt(e.target.value, 10); 
+  numRaysDisplay.textContent = `Rayos: ${numRays}`; 
 });
 
 // Bucle de animación
