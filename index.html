@@ -12,15 +12,31 @@
             align-items: center;
             height: 100vh;
             background-color: #222;
+            flex-direction: column;
         }
         canvas {
             border: 1px solid white;
+            margin-bottom: 20px;
+        }
+        #slider-container {
+            width: 80%;
+            text-align: center;
+        }
+        #numRaysDisplay {
+            color: white;
+            font-size: 18px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
 <canvas id="canvas"></canvas>
+
+<div id="slider-container">
+    <input type="range" id="raySlider" min="102" max="1000" value="102" step="1">
+    <div id="numRaysDisplay">Rayos: 102</div>
+</div>
 
 <script src="logic.js"></script>
 
