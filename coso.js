@@ -1,7 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// Tamaño del canvas.
+// Tamaño del canvas ajustado para adaptarse a pantallas móviles
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -110,28 +110,34 @@ function draw() {
   drawCircle(absorbCircle.x, absorbCircle.y, absorbCircle.radius, absorbCircle.color);
 }
 
-// Función para verificar si el mouse está sobre una circunferencia
+// Función para verificar si el mouse/táctil está sobre una circunferencia
 function isMouseInsideCircle(circle, x, y) {
   const dist = Math.hypot(circle.x - x, circle.y - y);
   return dist < circle.radius;
 }
 
-// Manejo del evento de clic y arrastre
-canvas.addEventListener('mousedown', (e) => {
-  mouseX = e.offsetX;
-  mouseY = e.offsetY;
+// Manejo del evento de clic y arrastre (para dispositivos táctiles también)
+function handleStart(e) {
+  const offsetX = e.touches ? e.touches[0].clientX : e.offsetX;
+  const offsetY = e.touches ? e.touches[0].clientY : e.offsetY;
+
+  mouseX = offsetX;
+  mouseY = offsetY;
 
   if (isMouseInsideCircle(lightCircle, mouseX, mouseY)) {
     lightCircle.isDragging = true;
   } else if (isMouseInsideCircle(absorbCircle, mouseX, mouseY)) {
     absorbCircle.isDragging = true;
   }
-});
+}
 
-canvas.addEventListener('mousemove', (e) => {
+function handleMove(e) {
   if (lightCircle.isDragging || absorbCircle.isDragging) {
-    const dx = e.offsetX - mouseX;
-    const dy = e.offsetY - mouseY;
+    const offsetX = e.touches ? e.touches[0].clientX : e.offsetX;
+    const offsetY = e.touches ? e.touches[0].clientY : e.offsetY;
+    
+    const dx = offsetX - mouseX;
+    const dy = offsetY - mouseY;
             
     if (lightCircle.isDragging) {
       lightCircle.x += dx;
@@ -141,15 +147,23 @@ canvas.addEventListener('mousemove', (e) => {
       absorbCircle.y += dy;
     }
 
-    mouseX = e.offsetX;
-    mouseY = e.offsetY;
+    mouseX = offsetX;
+    mouseY = offsetY;
   }
-});
+}
 
-canvas.addEventListener('mouseup', () => {
+function handleEnd() {
   lightCircle.isDragging = false;
   absorbCircle.isDragging = false;
-});
+}
+
+// Agregar eventos para dispositivos táctiles y mouse
+canvas.addEventListener('mousedown', handleStart);
+canvas.addEventListener('mousemove', handleMove);
+canvas.addEventListener('mouseup', handleEnd);
+canvas.addEventListener('touchstart', handleStart);
+canvas.addEventListener('touchmove', handleMove);
+canvas.addEventListener('touchend', handleEnd);
 
 // Manejo del slider para cambiar el número de rayos
 const raySlider = document.getElementById("raySlider");
@@ -157,7 +171,7 @@ const numRaysDisplay = document.getElementById("numRaysDisplay");
 
 raySlider.addEventListener('input', (e) => {
   numRays = parseInt(e.target.value, 10); 
-  numRaysDisplay.textContent = `Rayos: ${numRays}`; 
+  numRaysDisplay.textContent = `Rayos: ${numRays}`;
 });
 
 // Bucle de animación
